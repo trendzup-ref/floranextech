@@ -36,7 +36,7 @@ export default function Home() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-8 flex items-center"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw] leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[15vw] xl:text-[190px] 2xl:text-[230px] leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               WE <span className="text-white hover:text-secondary transition-colors duration-300">DRIVE</span>
             </h1>
           </motion.div>
@@ -46,7 +46,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="lg:col-span-4 relative rounded-2xl md:rounded-3xl bg-secondary p-4 sm:p-5 overflow-hidden flex flex-col justify-between group h-auto min-h-[200px] sm:h-[240px] lg:h-[260px]"
+            className="lg:col-span-4 relative rounded-2xl md:rounded-3xl bg-secondary p-4 sm:p-5 overflow-hidden flex flex-col justify-between group h-auto min-h-[200px] sm:h-[240px] lg:h-[220px] xl:h-[230px] 2xl:h-[250px]"
           >
             {/* Top Bar inside card */}
             <div className="flex items-center justify-between text-primary mb-2">
@@ -118,7 +118,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25 }}
-            className="lg:col-span-5 relative rounded-2xl md:rounded-3xl overflow-hidden border border-secondary/25 group shadow-[0_0_35px_rgba(0,0,0,0.8)] h-[200px] sm:h-[240px] lg:h-[260px] order-2 lg:order-1"
+            className="lg:col-span-5 relative rounded-2xl md:rounded-3xl overflow-hidden border border-secondary/25 group shadow-[0_0_35px_rgba(0,0,0,0.8)] h-[200px] sm:h-[240px] lg:h-[220px] xl:h-[230px] 2xl:h-[250px] order-2 lg:order-1"
           >
             {/* High-Impact Visual Background: Digital Agency Strategy Meeting / Brand Growth */}
             <div
@@ -154,7 +154,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 flex items-center justify-start lg:justify-end order-1 lg:order-2"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[15vw] xl:text-[190px] 2xl:text-[230px] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               GROWTH
             </h1>
           </motion.div>
