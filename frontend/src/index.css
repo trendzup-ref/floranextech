@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #020202;
+  --color-secondary: #3df2e0;
+
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Roboto", sans-serif;
+
+  /* Magic UI Animations */
+  --animate-marquee: marquee var(--duration, 30s) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--duration, 30s) linear infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-border-beam: border-beam calc(var(--duration)*1s) infinite linear;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(calc(-100% - var(--gap, 1rem)));
+    }
+  }
+
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(calc(-100% - var(--gap, 1rem)));
+    }
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  @keyframes border-beam {
+    100% {
+      offset-distance: 100%;
+    }
+  }
+}
+
+
+@layer base {
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #171717 inset !important;
+    /* Match your dark bg hex */
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: primary !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
