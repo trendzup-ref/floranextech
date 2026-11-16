@@ -27,3 +27,5 @@ yarn-error.log*
 
 # Sensitive scripts
 backend/seedAdmin.js
+backend/seed-admin.js
+backend/*seed*

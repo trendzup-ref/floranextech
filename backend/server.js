@@ -6,6 +6,7 @@ import cors from 'cors';
 import connectDB from './database/db.js';
 import authRoutes from './routes/auth.routes.js';
 import messageRoutes from './routes/message.route.js';
+import adminRoutes from './routes/admin.routes.js';
 
 dotenv.config();
 
@@ -42,7 +43,6 @@ app.use(cookieParser());
 const allowedOrigins = [
     process.env.CLIENT_URL,
     "http://localhost:5173",
-    "http://localhost:3000"
 ].filter(Boolean);
 
 app.use(cors({
@@ -81,6 +81,9 @@ app.use('/api/auth', authRoutes);
 
 // Message / enquiry routes
 app.use('/api/message', messageRoutes);
+
+//Admin routes
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use((req, res) => {

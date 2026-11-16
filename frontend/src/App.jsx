@@ -9,6 +9,8 @@ import Products from './pages/Products.jsx';
 import Contact from './pages/Contact.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import PublishEbook from './pages/PublishEbook.jsx';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="services" element={<Services />} />
             <Route path="products" element={<Products />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="admin/dashboard" element={<AdminDashboard />} />
+            <Route path="admin/ebooks/publish" element={<PublishEbook />} />
           </Route>
 
           <Route path="register" element={<Register />} />

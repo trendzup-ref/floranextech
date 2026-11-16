@@ -131,6 +131,16 @@ export default function Navbar() {
                     </div>
                     {/* Menu Actions */}
                     <div className="space-y-1">
+                      {user?.role === 'admin' && (
+                        <Link
+                          to="/admin/dashboard"
+                          onClick={() => setDropdownOpen(false)}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-body text-gray-300 hover:bg-secondary/10 hover:text-secondary transition-colors cursor-pointer"
+                        >
+                          <Shield className="w-4 h-4 text-secondary" />
+                          <span>Admin Dashboard</span>
+                        </Link>
+                      )}
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-body text-red-400 hover:bg-red-500 hover:text-white transition-colors cursor-pointer"
@@ -228,6 +238,15 @@ export default function Navbar() {
                         <p className="font-body text-xs text-gray-400 truncate">{user?.email}</p>
                       </div>
                     </div>
+                    {user?.role === 'admin' && (
+                      <Link
+                        to="/admin/dashboard"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-secondary bg-secondary/10 border border-secondary/30 hover:bg-secondary hover:text-primary transition-all"
+                      >
+                        <Shield className="w-4 h-4" /> Admin Dashboard
+                      </Link>
+                    )}
                     <button
                       onClick={() => {
                         setIsOpen(false);
