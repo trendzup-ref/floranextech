@@ -80,14 +80,14 @@ export default function Footer() {
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
-                href="floranextech@gmail.com"
+                href="mailto:floranextech@gmail.com"
                 aria-label="Email"
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-secondary hover:border-secondary/50 hover:bg-secondary/10 hover:shadow-[0_0_12px_rgba(61,242,224,0.3)] transition-all duration-300"
               >
                 <Mail className="w-4 h-4" />
               </a>
               <a
-                href="tel:+9310563727"
+                href="tel:+919310563727"
                 aria-label="Phone"
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-secondary hover:border-secondary/50 hover:bg-secondary/10 hover:shadow-[0_0_12px_rgba(61,242,224,0.3)] transition-all duration-300"
               >

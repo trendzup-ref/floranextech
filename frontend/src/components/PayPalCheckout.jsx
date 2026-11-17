@@ -170,7 +170,7 @@ export default function PayPalCheckout({
     const purchaseList = completedOrder.items?.length ? completedOrder.items : items;
 
     return (
-      <div className="p-6 rounded-3xl bg-secondary/10 border border-secondary/30 text-center space-y-4 animate-fadeIn">
+      <div className="p-6 rounded-3xl border border-secondary/30 text-center space-y-4 animate-fadeIn">
         <div className="w-14 h-14 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8" />
         </div>
@@ -196,7 +196,7 @@ export default function PayPalCheckout({
                 key={ebookId || idx}
                 onClick={() => handleDownload(item)}
                 disabled={isDownloading}
-                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-body text-sm font-semibold bg-secondary text-primary hover:bg-[#00e6c5] transition-all shadow-[0_0_15px_rgba(1,255,219,0.3)] cursor-pointer disabled:opacity-60 active:scale-[0.98]"
+                className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-body text-sm font-semibold bg-secondary text-primary hover:bg-white transition-all duration-300 ease-out cursor-pointer disabled:opacity-60 active:scale-[0.98]"
               >
                 {isDownloading ? (
                   <>
