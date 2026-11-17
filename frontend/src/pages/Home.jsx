@@ -35,7 +35,7 @@ export default function Home() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-8 flex items-center"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw]  leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw]  xl:text-[19vw] 2xl:text-[21vw] leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               WE DRIVE
             </h1>
           </motion.div>
@@ -102,7 +102,6 @@ export default function Home() {
             <div className="mt-2 pt-2 border-t border-primary/15 flex items-center justify-between text-primary font-body text-xs font-semibold">
               <span className="text-[11px] sm:text-xs">Hyper-growth architecture</span>
               <span className="flex items-center gap-0.5 group-hover:translate-x-1 transition-transform text-[10px] sm:text-[11px]">
-                Explore Work <ArrowUpRight className="w-3.5 h-3.5" />
               </span>
             </div>
           </motion.div>
@@ -152,7 +151,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 flex items-center justify-start lg:justify-end order-1 lg:order-2"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] xl:text-[19vw] 2xl:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               GROWTH
             </h1>
           </motion.div>

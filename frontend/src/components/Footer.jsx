@@ -199,12 +199,12 @@ export default function Footer() {
         <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
           <p>© {currentYear} Floranextech. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <Link to="/privacy" className="hover:text-secondary transition-colors">
+            <p className="hover:text-secondary transition-colors">
               Privacy Policy
-            </Link>
-            <Link to="/terms" className="hover:text-secondary transition-colors">
+            </p>
+            <p className="hover:text-secondary transition-colors">
               Terms of Service
-            </Link>
+            </p>
           </div>
         </div>
       </div>
