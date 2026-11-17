@@ -16,7 +16,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   // Close profile dropdown on outside click
@@ -98,8 +98,10 @@ export default function Navbar() {
           </div>
 
           {/* Action / User Auth Area (Desktop) */}
-          <div className="hidden md:flex items-center">
-            {isAuthenticated ? (
+          <div className="hidden md:flex items-center min-w-[190px] justify-end">
+            {loading ? (
+              <div className="h-9 w-28 rounded-lg bg-white/5 animate-pulse" />
+            ) : isAuthenticated ? (
               <div className="relative" ref={dropdownRef}>
                 <button
                   type="button"
@@ -236,7 +238,9 @@ export default function Navbar() {
               ))}
 
               <div className="pt-3 px-2 border-t border-white/10 mt-2">
-                {isAuthenticated ? (
+                {loading ? (
+                  <div className="h-10 w-full rounded-xl bg-white/5 animate-pulse" />
+                ) : isAuthenticated ? (
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 px-3 py-2 bg-white/5 rounded-xl border border-white/10">
                       <div className="w-10 h-10 rounded-full bg-secondary text-primary flex items-center justify-center font-bold">
