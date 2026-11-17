@@ -60,7 +60,7 @@ export default function Footer() {
                 </svg>
               </div>
               <span className="font-display text-2xl tracking-wider text-white">
-                Floranex<span className="text-secondary">tech</span>
+                Floranextech
               </span>
             </Link>
 
@@ -80,14 +80,14 @@ export default function Footer() {
                 <MessageCircle className="w-4 h-4" />
               </a>
               <a
-                href="mailto:contact@floranextech.com"
+                href="floranextech@gmail.com"
                 aria-label="Email"
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-secondary hover:border-secondary/50 hover:bg-secondary/10 hover:shadow-[0_0_12px_rgba(61,242,224,0.3)] transition-all duration-300"
               >
                 <Mail className="w-4 h-4" />
               </a>
               <a
-                href="tel:+919971123820"
+                href="tel:+9310563727"
                 aria-label="Phone"
                 className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-secondary hover:border-secondary/50 hover:bg-secondary/10 hover:shadow-[0_0_12px_rgba(61,242,224,0.3)] transition-all duration-300"
               >
@@ -150,7 +150,7 @@ export default function Footer() {
                     Headquarters
                   </span>
                   <p className="text-gray-400 text-xs leading-relaxed">
-                    43 NEAR MOTHER SCHOOL, ADHCHINI, MMTC/STC Colony, SOUTH DELHI, DELHI, 110017.
+                    Trendzupmedia Creations Pvt.Ltd. 307/3rd Floor Vardhaman Gee Dee Plaza Building, Dwarka Sector 12, New Delhi 110075
                   </p>
                 </div>
               </div>
@@ -165,10 +165,10 @@ export default function Footer() {
                     Phone
                   </span>
                   <a
-                    href="tel:+919971123820"
+                    href="tel:+919310563727"
                     className="text-gray-400 hover:text-secondary text-xs transition-colors"
                   >
-                    +91 9971123820
+                    +91 9310563727
                   </a>
                 </div>
               </div>
@@ -182,12 +182,6 @@ export default function Footer() {
                   <span className="block font-semibold text-white text-xs uppercase tracking-wider mb-0.5">
                     Email
                   </span>
-                  <a
-                    href="mailto:info@floranextech.com"
-                    className="block text-gray-400 hover:text-secondary text-xs transition-colors"
-                  >
-                    info@floranextech.com
-                  </a>
                   <a
                     href="mailto:floranextech@gmail.com"
                     className="block text-gray-400 hover:text-secondary text-xs transition-colors"

@@ -244,7 +244,7 @@ export default function Contact() {
                       Headquarters
                     </span>
                     <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
-                      43 NEAR MOTHER SCHOOL, ADHCHINI, MMTC/STC Colony, SOUTH DELHI, DELHI, 110017.
+                      Trendzupmedia Creations Pvt.Ltd. 307/3rd Floor Vardhaman Gee Dee Plaza Building, Dwarka Sector 12, New Delhi 110075
                     </p>
                   </div>
                 </div>
@@ -259,13 +259,13 @@ export default function Contact() {
                       Phone Number
                     </span>
                     <a
-                      href="tel:+919971123820"
+                      href="tel:+919310563727"
                       className="text-gray-300 hover:text-secondary text-sm font-medium transition-colors"
                     >
-                      +91 9971123820
+                      +91 9310563727
                     </a>
                     <span className="block text-[11px] text-gray-500 font-mono mt-0.5">
-                      Mon – Sat: 9:00 AM – 7:00 PM IST
+                      Mon – Sat: 9:00 AM – 6:00 PM IST
                     </span>
                   </div>
                 </div>
@@ -280,14 +280,8 @@ export default function Contact() {
                       Email Inquiries
                     </span>
                     <a
-                      href="mailto:info@floranextech.com"
-                      className="block text-gray-300 hover:text-secondary text-sm font-medium transition-colors"
-                    >
-                      info@floranextech.com
-                    </a>
-                    <a
                       href="mailto:floranextech@gmail.com"
-                      className="block text-gray-300 hover:text-secondary text-sm font-medium transition-colors mt-0.5"
+                      className="block text-gray-300 hover:text-secondary text-sm font-medium transition-colors"
                     >
                       floranextech@gmail.com
                     </a>
