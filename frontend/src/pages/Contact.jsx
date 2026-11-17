@@ -84,7 +84,7 @@ export default function Contact() {
           {/* LEFT COLUMN: Contact Form */}
           <div className="lg:col-span-7 rounded-2xl md:rounded-3xl bg-primary/60 backdrop-blur-xl border border-white/10 hover:border-secondary/40 p-7 sm:p-10 transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
             <h2 className="font-display text-2xl sm:text-3xl tracking-wide text-white uppercase mb-2">
-              Send us a <span className="text-secondary">Message</span>
+              Send us a Message
             </h2>
             <p className="font-body text-xs sm:text-sm text-gray-400 mb-8">
               Fill out the form below and we'll connect with you shortly.
@@ -226,7 +226,7 @@ export default function Contact() {
             <div className="rounded-2xl md:rounded-3xl bg-primary/60 backdrop-blur-xl border border-white/10 p-7 sm:p-9 space-y-7 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
               <div>
                 <h2 className="font-display text-2xl sm:text-3xl tracking-wide text-white uppercase mb-2">
-                  Direct <span className="text-secondary">Channels</span>
+                  Direct Channels
                 </h2>
                 <p className="font-body text-xs sm:text-sm text-gray-400">
                   Connect with our team directly via phone, email, or visit our headquarters.

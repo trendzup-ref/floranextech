@@ -28,7 +28,7 @@ const ebookSchema = new mongoose.Schema(
         category: {
             type: String,
             required: true,
-            enum: ['eBook', 'Template', 'Guide', 'Bundle'],
+            enum: ['eBook'],
             default: 'eBook',
         },
 
@@ -103,4 +103,4 @@ ebookSchema.index({ title: 'text', description: 'text' });
 ebookSchema.index({ category: 1, isPublished: 1 });
 
 export const EBook = mongoose.model('Ebook', ebookSchema);
-export default EBook;
+

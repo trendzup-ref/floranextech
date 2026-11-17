@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { User, LogOut, Shield, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { User, LogOut, Shield, ChevronDown, CheckCircle2, ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/context';
 
 const navLinks = [
@@ -121,7 +121,7 @@ export default function Navbar() {
                         {user?.name ? user.name.charAt(0).toUpperCase() : <User className="w-5 h-5" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-display text-lg text-white uppercase truncate">
+                        <p className="font-display text-lg text-white uppercase truncate tracking-wide">
                           {user?.name || "User Profile"}
                         </p>
                         <p className="font-body text-xs text-gray-400 truncate">
@@ -131,6 +131,15 @@ export default function Navbar() {
                     </div>
                     {/* Menu Actions */}
                     <div className="space-y-1">
+                      <Link
+                        to="/my-purchases"
+                        onClick={() => setDropdownOpen(false)}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-body text-gray-300 hover:bg-secondary/10 hover:text-secondary transition-colors cursor-pointer"
+                      >
+                        <ShoppingBag className="w-4 h-4 text-secondary" />
+                        <span>My Purchases</span>
+                      </Link>
+
                       {user?.role === 'admin' && (
                         <Link
                           to="/admin/dashboard"
@@ -238,6 +247,13 @@ export default function Navbar() {
                         <p className="font-body text-xs text-gray-400 truncate">{user?.email}</p>
                       </div>
                     </div>
+                    <Link
+                      to="/my-purchases"
+                      onClick={() => setIsOpen(false)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-secondary bg-secondary/10 border border-secondary/30 hover:bg-secondary hover:text-primary transition-all"
+                    >
+                      <ShoppingBag className="w-4 h-4" /> My Purchases
+                    </Link>
                     {user?.role === 'admin' && (
                       <Link
                         to="/admin/dashboard"

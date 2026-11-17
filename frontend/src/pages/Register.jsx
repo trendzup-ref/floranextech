@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Sparkles, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { registerUser } from "@/api/authApi.js";
 import { useAuth } from "@/context";
@@ -13,6 +13,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { fetchUser } = useAuth();
 
   const handleRegister = async (e) => {
@@ -28,7 +29,8 @@ const Register = () => {
       const response = await registerUser({ name, email, password });
       if (response?.success) {
         await fetchUser();
-        navigate("/");
+        const destination = location.state?.from || "/";
+        navigate(destination);
       } else {
         setError(response?.message || "Registration failed. Try again.");
       }

@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { ArrowUpRight, TrendingUp, Sparkles, Globe, Code2, Layers, ShoppingBag } from "lucide-react";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { Link } from "react-router-dom";
 import ProcessSection from "@/components/ProcessSection";
 import heroMeetingImg from "@/assets/Floranextech_hero_image.webp";
@@ -36,8 +35,8 @@ export default function Home() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-8 flex items-center"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[15vw] xl:text-[190px] 2xl:text-[230px] leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
-              WE <span className="text-white hover:text-secondary transition-colors duration-300">DRIVE</span>
+            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw]  leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+              WE DRIVE
             </h1>
           </motion.div>
 
@@ -54,7 +53,6 @@ export default function Home() {
                 <TrendingUp className="w-4 h-4 stroke-[2.5]" /> Scale Engine
               </span>
               <span className="bg-primary text-secondary text-[9px] sm:text-[10px] font-bold tracking-widest uppercase px-2 py-0.5 rounded-full">
-                Active Campaign
               </span>
             </div>
 
@@ -154,7 +152,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 flex items-center justify-start lg:justify-end order-1 lg:order-2"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[15vw] xl:text-[190px] 2xl:text-[230px] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               GROWTH
             </h1>
           </motion.div>
@@ -165,25 +163,24 @@ export default function Home() {
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="mt-6 sm:mt-10 lg:mt-14 pt-6 sm:pt-8 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+          className="mt-6 sm:mt-10 lg:mt-15 pt-6 sm:pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
         >
           <div className="max-w-xl">
-            <p className="font-display text-2xl sm:text-3xl text-white uppercase leading-tight">
+            <p className="font-display text-2xl sm:text-3xl text-white uppercase">
               ACCELERATING BRANDS THROUGH INTELLIGENT MARKETING
             </p>
-            <p className="font-body text-xs sm:text-sm text-gray-400 mt-2 leading-relaxed">
+            <p className="font-body text-xs sm:text-sm text-gray-400  leading-relaxed">
               We combine premium visual storytelling with data-driven performance marketing to turn visitors into loyal customers and scale your revenue.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
             <Link to="/contact" className="w-full sm:w-auto">
-              <ShimmerButton
-                shimmerColor="#3df2e0"
-                className="w-full sm:w-auto font-body font-bold text-xs sm:text-sm tracking-wider uppercase text-white bg-primary border-secondary/50 px-7 py-3.5 shadow-[0_0_20px_rgba(61,242,224,0.3)] hover:scale-105"
+              <button
+                className="w-full sm:w-auto font-body font-bold text-xs sm:text-sm  uppercase  rounded-full text-primary bg-secondary  px-7 py-3.5 hover:bg-white transition-all duration-300 ease-out"
               >
                 Start Your Project
-              </ShimmerButton>
+              </button>
             </Link>
 
             <Link

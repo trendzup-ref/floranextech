@@ -57,3 +57,30 @@ export const deleteEbook = async (ebookId) => {
     const response = await API.delete(`/api/admin/ebooks/${ebookId}`);
     return response.data;
 };
+
+/**
+ * Fetch all contact messages with server-side pagination and optional search filter.
+ * @param {Object} params - { page, limit, search }
+ */
+export const getAllContactMessages = async (params = {}) => {
+    const response = await API.get('/api/admin/messages', { params });
+    return response.data;
+};
+
+/**
+ * Get details of a single contact message by ID.
+ * @param {string} messageId
+ */
+export const getContactMessageDetails = async (messageId) => {
+    const response = await API.get(`/api/admin/messages/${messageId}`);
+    return response.data;
+};
+
+/**
+ * Delete a specific contact message by ID.
+ * @param {string} messageId
+ */
+export const deleteContactMessage = async (messageId) => {
+    const response = await API.delete(`/api/admin/messages/${messageId}`);
+    return response.data;
+};

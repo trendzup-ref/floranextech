@@ -22,7 +22,6 @@ export default function PublishEbook() {
   // Form state
   const [formData, setFormData] = useState({
     title: '',
-    slug: '',
     description: '',
     price: '',
     category: 'eBook',
@@ -129,7 +128,6 @@ export default function PublishEbook() {
 
       const data = new FormData();
       data.append('title', formData.title.trim());
-      if (formData.slug) data.append('slug', formData.slug.trim());
       data.append('description', formData.description.trim());
       data.append('price', formData.price);
       data.append('category', formData.category);
@@ -169,16 +167,10 @@ export default function PublishEbook() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-lg bg-secondary/10 border border-secondary/30 text-secondary">
-                <Sparkles className="w-4 h-4" />
-              </span>
               <h1 className="font-display text-2xl sm:text-3xl text-white tracking-wider">
-                Publish New <span className="text-secondary">eBook</span>
+                Publish New eBook
               </h1>
             </div>
-            <p className="font-body text-xs sm:text-sm text-gray-400 mt-0.5">
-              Files are directly chunked and saved to MongoDB GridFS.
-            </p>
           </div>
         </div>
 
@@ -216,8 +208,7 @@ export default function PublishEbook() {
         {/* SECTION 1: BASIC DETAILS */}
         <div className="p-6 sm:p-8 rounded-3xl bg-[#0c0c0c] border border-white/10 space-y-6 shadow-xl">
           <h2 className="font-display text-xl text-white tracking-wide flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-secondary"></span>
-            1. eBook Details
+            eBook Details
           </h2>
 
           <div className="grid grid-cols-1 gap-6">
@@ -235,51 +226,20 @@ export default function PublishEbook() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-300 font-semibold mb-2">
-                  Custom Slug (Optional)
-                </label>
-                <input
-                  type="text"
-                  placeholder="auto-generated-if-empty"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm font-mono focus:outline-none focus:border-secondary transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-300 font-semibold mb-2">
-                  Category *
-                </label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-[#141414] border border-white/10 text-white text-sm focus:outline-none focus:border-secondary transition-colors"
-                >
-                  <option value="eBook">eBook</option>
-                  <option value="Template">Template</option>
-                  <option value="Guide">Guide</option>
-                  <option value="Bundle">Bundle</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-gray-300 font-semibold mb-2">
-                  Price ($ USD) *
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  required
-                  placeholder="19.99"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-secondary transition-colors"
-                />
-              </div>
+            <div>
+              <label className="block text-xs uppercase tracking-wider text-gray-300 font-semibold mb-2">
+                Price (€ EUR) *
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                required
+                placeholder="19.99"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-secondary transition-colors"
+              />
             </div>
 
             <div>
@@ -301,8 +261,7 @@ export default function PublishEbook() {
         {/* SECTION 2: DRAG & DROP FILE UPLOADS */}
         <div className="p-6 sm:p-8 rounded-3xl bg-[#0c0c0c] border border-white/10 space-y-6 shadow-xl">
           <h2 className="font-display text-xl text-white tracking-wide flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-secondary"></span>
-            2. File Uploads (MongoDB GridFS)
+            File Uploads
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -326,13 +285,12 @@ export default function PublishEbook() {
                 onDragLeave={onCoverDragLeave}
                 onDrop={onCoverDrop}
                 onClick={() => coverInputRef.current?.click()}
-                className={`relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
-                  isCoverDragging
-                    ? 'border-secondary bg-secondary/10 scale-[1.01]'
-                    : coverPreview
+                className={`relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${isCoverDragging
+                  ? 'border-secondary bg-secondary/10 scale-[1.01]'
+                  : coverPreview
                     ? 'border-secondary/40 bg-white/[0.02]'
                     : 'border-white/15 hover:border-secondary/60 bg-white/[0.01]'
-                }`}
+                  }`}
               >
                 {coverPreview ? (
                   <div className="relative group flex flex-col items-center">
@@ -396,13 +354,12 @@ export default function PublishEbook() {
                 onDragLeave={onAssetDragLeave}
                 onDrop={onAssetDrop}
                 onClick={() => assetInputRef.current?.click()}
-                className={`relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all min-h-[190px] ${
-                  isAssetDragging
-                    ? 'border-secondary bg-secondary/10 scale-[1.01]'
-                    : digitalAssetFile
+                className={`relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all min-h-[190px] ${isAssetDragging
+                  ? 'border-secondary bg-secondary/10 scale-[1.01]'
+                  : digitalAssetFile
                     ? 'border-secondary/40 bg-white/[0.02]'
                     : 'border-white/15 hover:border-secondary/60 bg-white/[0.01]'
-                }`}
+                  }`}
               >
                 {digitalAssetFile ? (
                   <div className="relative group flex flex-col items-center text-center">
@@ -450,21 +407,6 @@ export default function PublishEbook() {
             </div>
           </div>
 
-          {/* Publishing state toggle */}
-          <div className="pt-4 flex items-center gap-3">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={formData.isPublished}
-                onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
-              <span className="ml-3 text-xs uppercase tracking-wider text-gray-300 font-semibold">
-                Publish immediately to store
-              </span>
-            </label>
-          </div>
         </div>
 
         {/* SUBMIT BUTTON BAR */}

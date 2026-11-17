@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users,
   BookOpen,
+  Mail,
   Plus,
   Trash2,
   Eye,
@@ -17,7 +18,10 @@ import {
   Layers,
   Sparkles,
   ExternalLink,
-  CheckCircle2
+  CheckCircle2,
+  Calendar,
+  MessageSquare,
+  UserCheck
 } from 'lucide-react';
 import { useAuth } from '@/context';
 import {
@@ -27,6 +31,9 @@ import {
   publishEbook,
   getEbookDetails,
   deleteEbook,
+  getAllContactMessages,
+  getContactMessageDetails,
+  deleteContactMessage,
 } from '@/api/adminApi';
 
 export default function AdminDashboard() {
@@ -46,6 +53,14 @@ export default function AdminDashboard() {
   const [ebookSearch, setEbookSearch] = useState('');
   const [ebookPage, setEbookPage] = useState(1);
   const [ebookPagination, setEbookPagination] = useState({ totalPages: 1, totalEbooks: 0 });
+
+  // Contact Messages state
+  const [messages, setMessages] = useState([]);
+  const [messagesLoading, setMessagesLoading] = useState(false);
+  const [messageSearch, setMessageSearch] = useState('');
+  const [messagePage, setMessagePage] = useState(1);
+  const [messagePagination, setMessagePagination] = useState({ totalPages: 1, totalMessages: 0 });
+  const [messageDetailsModal, setMessageDetailsModal] = useState({ open: false, data: null });
 
   // Modals state
   const [deleteModal, setDeleteModal] = useState({ open: false, type: '', id: '', name: '' });
@@ -115,13 +130,39 @@ export default function AdminDashboard() {
     }
   }, [ebookPage, ebookSearch]);
 
+  // Fetch Contact Messages (simplified: 20 per page)
+  const fetchMessages = useCallback(async () => {
+    setMessagesLoading(true);
+    try {
+      const res = await getAllContactMessages({
+        page: messagePage,
+        limit: 20,
+        search: messageSearch,
+      });
+      if (res.success) {
+        setMessages(res.messages || []);
+        setMessagePagination({
+          totalPages: res.pagination?.totalPages || 1,
+          totalMessages: res.pagination?.totalMessages || 0,
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+      showFeedback(err.response?.data?.message || 'Failed to fetch contact messages', 'error');
+    } finally {
+      setMessagesLoading(false);
+    }
+  }, [messagePage, messageSearch]);
+
   useEffect(() => {
     if (activeTab === 'users') {
       fetchUsers();
-    } else {
+    } else if (activeTab === 'ebooks') {
       fetchEbooks();
+    } else if (activeTab === 'messages') {
+      fetchMessages();
     }
-  }, [activeTab, fetchUsers, fetchEbooks]);
+  }, [activeTab, fetchUsers, fetchEbooks, fetchMessages]);
 
   // Handle Search submit
   const handleUserSearchSubmit = (e) => {
@@ -134,6 +175,12 @@ export default function AdminDashboard() {
     e.preventDefault();
     setEbookPage(1);
     fetchEbooks();
+  };
+
+  const handleMessageSearchSubmit = (e) => {
+    e.preventDefault();
+    setMessagePage(1);
+    fetchMessages();
   };
 
   // Delete Action
@@ -151,11 +198,31 @@ export default function AdminDashboard() {
           showFeedback('eBook deleted successfully');
           fetchEbooks();
         }
+      } else if (deleteModal.type === 'message') {
+        const res = await deleteContactMessage(deleteModal.id);
+        if (res.success) {
+          showFeedback('Contact message deleted successfully');
+          fetchMessages();
+        }
       }
     } catch (err) {
       showFeedback(err.response?.data?.message || 'Failed to delete item', 'error');
     } finally {
       setDeleteModal({ open: false, type: '', id: '', name: '' });
+    }
+  };
+
+  // View single message details
+  const handleViewMessageDetails = async (message) => {
+    try {
+      const res = await getContactMessageDetails(message._id);
+      if (res.success && res.data) {
+        setMessageDetailsModal({ open: true, data: res.data });
+      } else {
+        setMessageDetailsModal({ open: true, data: message });
+      }
+    } catch (err) {
+      setMessageDetailsModal({ open: true, data: message });
     }
   };
 
@@ -231,11 +298,8 @@ export default function AdminDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-8 border-b border-secondary/20">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <span className="p-2 rounded-xl bg-secondary/10 border border-secondary/30 text-secondary">
-              <Shield className="w-6 h-6" />
-            </span>
             <h1 className="font-display text-3xl sm:text-4xl text-white tracking-wider">
-              Admin <span className="text-secondary">Dashboard</span>
+              Admin Dashboard
             </h1>
           </div>
           <p className="font-body text-gray-400 text-sm">
@@ -244,26 +308,36 @@ export default function AdminDashboard() {
         </div>
 
         {/* Tab switchers */}
-        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10 self-start md:self-auto">
           <button
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-body text-sm font-semibold transition-all ${activeTab === 'users'
-                ? 'bg-secondary text-primary shadow-[0_0_15px_rgba(1,255,219,0.3)]'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-body text-xs sm:text-sm font-semibold transition-all ${activeTab === 'users'
+              ? 'bg-secondary text-primary'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
           >
             <Users className="w-4 h-4" />
-            <span>Manage Users</span>
+            <span>Users</span>
           </button>
           <button
             onClick={() => setActiveTab('ebooks')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-body text-sm font-semibold transition-all ${activeTab === 'ebooks'
-                ? 'bg-secondary text-primary shadow-[0_0_15px_rgba(1,255,219,0.3)]'
-                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-body text-xs sm:text-sm font-semibold transition-all ${activeTab === 'ebooks'
+              ? 'bg-secondary text-primary shadow-[0_0_15px_rgba(1,255,219,0.3)]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
               }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>Manage eBooks</span>
+            <span>eBooks</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('messages')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-body text-xs sm:text-sm font-semibold transition-all ${activeTab === 'messages'
+              ? 'bg-secondary text-primary shadow-[0_0_15px_rgba(1,255,219,0.3)]'
+              : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+          >
+            <Mail className="w-4 h-4" />
+            <span>Contact Messages</span>
           </button>
         </div>
       </div>
@@ -272,8 +346,8 @@ export default function AdminDashboard() {
       {feedback.message && (
         <div
           className={`mt-6 p-4 rounded-xl flex items-center justify-between border ${feedback.type === 'error'
-              ? 'bg-red-500/10 border-red-500/30 text-red-400'
-              : 'bg-secondary/10 border-secondary/30 text-secondary'
+            ? 'bg-red-500/10 border-red-500/30 text-red-400'
+            : 'bg-secondary/10 border-secondary/30 text-secondary'
             }`}
         >
           <div className="flex items-center gap-2 text-sm font-medium">
@@ -343,8 +417,8 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${item.role === 'admin'
-                              ? 'bg-secondary/15 text-secondary border border-secondary/30'
-                              : 'bg-white/10 text-gray-300'
+                            ? 'bg-secondary/15 text-secondary border border-secondary/30'
+                            : 'bg-white/10 text-gray-300'
                             }`}
                         >
                           {item.role}
@@ -410,7 +484,7 @@ export default function AdminDashboard() {
             <form onSubmit={handleEbookSearchSubmit} className="relative w-full sm:w-96">
               <input
                 type="text"
-                placeholder="Search eBook title, slug, or category..."
+                placeholder="Search eBook title or slug..."
                 value={ebookSearch}
                 onChange={(e) => setEbookSearch(e.target.value)}
                 className="w-full px-4 py-2.5 pl-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-secondary transition-all"
@@ -437,7 +511,6 @@ export default function AdminDashboard() {
               <thead className="bg-white/5 text-xs uppercase tracking-wider text-gray-400 border-b border-white/10 font-body">
                 <tr>
                   <th className="px-6 py-4">eBook</th>
-                  <th className="px-6 py-4">Category</th>
                   <th className="px-6 py-4">Price</th>
                   <th className="px-6 py-4">Status</th>
                   <th className="px-6 py-4 text-right">Actions</th>
@@ -446,13 +519,13 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-white/5 font-body">
                 {ebooksLoading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-12 text-gray-400">
+                    <td colSpan={4} className="text-center py-12 text-gray-400">
                       Loading eBooks...
                     </td>
                   </tr>
                 ) : ebooks.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-12 text-gray-400">
+                    <td colSpan={4} className="text-center py-12 text-gray-400">
                       No eBooks published yet. Click "Publish eBook" to add one.
                     </td>
                   </tr>
@@ -472,21 +545,15 @@ export default function AdminDashboard() {
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="font-display text-base text-white truncate max-w-xs">{item.title}</p>
-                          <p className="font-body text-xs text-gray-500 font-mono">/{item.slug}</p>
+                          <p className="font-display text-base text-white truncate max-w-md tracking-wider">{item.title}</p>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/10 text-gray-300">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 font-semibold text-secondary">${Number(item.price).toFixed(2)}</td>
+                      <td className="px-6 py-4 font-semibold text-secondary">€{Number(item.price).toFixed(2)}</td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${item.isPublished
-                              ? 'bg-secondary/15 text-secondary border border-secondary/30'
-                              : 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
+                            ? 'bg-secondary/15 text-secondary border border-secondary/30'
+                            : 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
                             }`}
                         >
                           {item.isPublished ? 'Published' : 'Draft'}
@@ -540,6 +607,122 @@ export default function AdminDashboard() {
               <button
                 disabled={ebookPage >= ebookPagination.totalPages || ebooksLoading}
                 onClick={() => setEbookPage((p) => p + 1)}
+                className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-secondary disabled:opacity-40 disabled:hover:text-gray-300 transition-colors"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: CONTACT MESSAGES */}
+      {activeTab === 'messages' && (
+        <div className="space-y-6 animate-fadeIn mt-6">
+          {/* Controls Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <form onSubmit={handleMessageSearchSubmit} className="relative w-full sm:w-96">
+              <input
+                type="text"
+                placeholder="Search name, email, subject, content..."
+                value={messageSearch}
+                onChange={(e) => setMessageSearch(e.target.value)}
+                className="w-full px-4 py-2.5 pl-10 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 text-sm focus:outline-none focus:border-secondary transition-all"
+              />
+              <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+            </form>
+          </div>
+
+          {/* Messages Table */}
+          <div className="overflow-x-auto rounded-2xl border border-white/10 bg-[#0d0d0d]">
+            <table className="w-full text-left text-sm text-gray-300">
+              <thead className="bg-white/5 text-xs uppercase tracking-wider text-gray-400 border-b border-white/10 font-body">
+                <tr>
+                  <th className="px-6 py-4">Sender</th>
+                  <th className="px-6 py-4">Subject</th>
+                  <th className="px-6 py-4">Date</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5 font-body">
+                {messagesLoading ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-12 text-gray-400">
+                      Loading contact messages...
+                    </td>
+                  </tr>
+                ) : messages.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-12 text-gray-400">
+                      No contact messages found.
+                    </td>
+                  </tr>
+                ) : (
+                  messages.map((item) => (
+                    <tr key={item._id} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="font-medium text-white">{item.name}</div>
+                        <div className="text-xs text-gray-400 font-mono mt-0.5">{item.email}</div>
+                      </td>
+                      <td className="px-6 py-4 max-w-sm">
+                        <p className="text-white font-medium truncate">{item.subject}</p>
+                        <p className="text-xs text-gray-400 truncate mt-0.5">{item.message}</p>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-gray-400 whitespace-nowrap">
+                        {new Date(item.createdAt).toLocaleDateString(undefined, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="inline-flex items-center gap-1">
+                          <button
+                            onClick={() => handleViewMessageDetails(item)}
+                            className="p-2 rounded-lg text-gray-400 hover:text-secondary hover:bg-white/5 transition-colors"
+                            title="Open Message Details"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              setDeleteModal({
+                                open: true,
+                                type: 'message',
+                                id: item._id,
+                                name: `${item.name}'s enquiry (${item.subject})`,
+                              })
+                            }
+                            className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                            title="Delete Contact Message"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Simple Pagination Bar */}
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-xs text-gray-400 font-body">
+              Page {messagePage} of {messagePagination.totalPages || 1}
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                disabled={messagePage <= 1 || messagesLoading}
+                onClick={() => setMessagePage((p) => Math.max(1, p - 1))}
+                className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-secondary disabled:opacity-40 disabled:hover:text-gray-300 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                disabled={messagePage >= messagePagination.totalPages || messagesLoading}
+                onClick={() => setMessagePage((p) => p + 1)}
                 className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-secondary disabled:opacity-40 disabled:hover:text-gray-300 transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -610,13 +793,12 @@ export default function AdminDashboard() {
                   )}
                   <div className="space-y-2 flex-1">
                     <h4 className="font-display text-2xl text-white">{detailsModal.data.title}</h4>
-                    <p className="text-xs text-gray-500 font-mono">Slug: {detailsModal.data.slug}</p>
                     <div className="flex flex-wrap gap-2 pt-1">
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-secondary/15 text-secondary border border-secondary/30">
-                        {detailsModal.data.category}
+                        eBook
                       </span>
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/10 text-gray-300">
-                        ${Number(detailsModal.data.price).toFixed(2)}
+                        €{Number(detailsModal.data.price).toFixed(2)}
                       </span>
                       <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/10 text-gray-300">
                         Sales: {detailsModal.data.salesCount || 0}
@@ -629,14 +811,14 @@ export default function AdminDashboard() {
                   <h5 className="font-semibold text-white uppercase text-xs tracking-wider mb-1">
                     Description
                   </h5>
-                  <p className="text-gray-300 leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5">
+                  <div className="text-gray-300 leading-relaxed bg-white/5 p-4 rounded-xl border border-white/5 max-h-56 overflow-y-auto whitespace-pre-line">
                     {detailsModal.data.description}
-                  </p>
+                  </div>
                 </div>
 
                 <div className="bg-white/5 p-4 rounded-xl border border-white/5 space-y-2">
                   <h5 className="font-semibold text-white uppercase text-xs tracking-wider mb-2">
-                    Digital Asset File (MongoDB GridFS)
+                    Digital File
                   </h5>
                   <p className="text-gray-400 text-xs">
                     Format: <span className="text-white font-mono uppercase">{detailsModal.data.digitalFile?.fileType}</span>
@@ -656,7 +838,7 @@ export default function AdminDashboard() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs text-secondary hover:underline pt-1"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" /> Direct GridFS Asset Download Link
+                      <ExternalLink className="w-3.5 h-3.5" /> Direct Download Link
                     </a>
                   )}
                 </div>
@@ -672,7 +854,6 @@ export default function AdminDashboard() {
           <div className="w-full max-w-2xl rounded-2xl bg-[#111] border border-white/10 p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-secondary" />
                 <h3 className="font-display text-2xl text-white">Publish New eBook</h3>
               </div>
               <button
@@ -707,47 +888,19 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-300 text-xs uppercase tracking-wider mb-1.5">
-                    Custom Slug (Optional)
+                    Price (€ EUR) *
                   </label>
                   <input
-                    type="text"
-                    placeholder="mastering-digital-marketing"
-                    value={formData.slug}
-                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-secondary font-mono"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    required
+                    placeholder="29.99"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-secondary"
                   />
                 </div>
-                <div>
-                  <label className="block text-gray-300 text-xs uppercase tracking-wider mb-1.5">
-                    Category *
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-[#1a1a1a] border border-white/10 text-white text-sm focus:outline-none focus:border-secondary"
-                  >
-                    <option value="eBook">eBook</option>
-                    <option value="Template">Template</option>
-                    <option value="Guide">Guide</option>
-                    <option value="Bundle">Bundle</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-gray-300 text-xs uppercase tracking-wider mb-1.5">
-                  Price ($ USD) *
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  required
-                  placeholder="29.99"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-secondary"
-                />
               </div>
 
               <div>
@@ -766,7 +919,7 @@ export default function AdminDashboard() {
 
               <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
                 <h4 className="text-white font-semibold text-xs uppercase tracking-wider">
-                  Cover Image File (MongoDB GridFS) *
+                  Cover Image File *
                 </h4>
                 <div>
                   <input
@@ -784,7 +937,7 @@ export default function AdminDashboard() {
 
               <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
                 <h4 className="text-white font-semibold text-xs uppercase tracking-wider">
-                  Digital Asset File (MongoDB GridFS) *
+                  Digital  File*
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
@@ -837,6 +990,110 @@ export default function AdminDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: CONTACT MESSAGE DETAILS */}
+      {messageDetailsModal.open && messageDetailsModal.data && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-2xl rounded-2xl bg-[#111] border border-white/10 p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="p-2 rounded-xl bg-secondary/10 border border-secondary/20 text-secondary">
+                  <Mail className="w-5 h-5" />
+                </span>
+                <h3 className="font-display text-2xl text-white">Contact Enquiry</h3>
+              </div>
+              <button
+                onClick={() => setMessageDetailsModal({ open: false, data: null })}
+                className="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-5 font-body text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 block mb-1">
+                    Sender Name
+                  </span>
+                  <span className="text-white font-medium text-base">
+                    {messageDetailsModal.data.name}
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                  <span className="text-[11px] uppercase tracking-wider text-gray-400 block mb-1">
+                    Email Address
+                  </span>
+                  <a
+                    href={`mailto:${messageDetailsModal.data.email}`}
+                    className="text-secondary hover:underline font-mono text-sm block truncate"
+                  >
+                    {messageDetailsModal.data.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                <span className="text-[11px] uppercase tracking-wider text-gray-400 block mb-1">
+                  Subject
+                </span>
+                <span className="text-white font-medium text-base">
+                  {messageDetailsModal.data.subject}
+                </span>
+              </div>
+
+              <div>
+                <span className="text-[11px] uppercase tracking-wider text-gray-400 block mb-2 font-semibold">
+                  Full Message
+                </span>
+                <div className="p-4 rounded-xl bg-white/[0.03] border border-white/10 text-gray-200 leading-relaxed whitespace-pre-wrap max-h-60 overflow-y-auto">
+                  {messageDetailsModal.data.message}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-white/5">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
+                  Received:{' '}
+                  {new Date(messageDetailsModal.data.createdAt).toLocaleString(undefined, {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-4 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  const toDelete = messageDetailsModal.data;
+                  setMessageDetailsModal({ open: false, data: null });
+                  setDeleteModal({
+                    open: true,
+                    type: 'message',
+                    id: toDelete._id,
+                    name: `${toDelete.name}'s enquiry`,
+                  });
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Message</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setMessageDetailsModal({ open: false, data: null })}
+                className="px-5 py-2 rounded-xl font-body text-xs font-semibold bg-white/10 text-white hover:bg-white/20 transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -7,6 +7,8 @@ import connectDB from './database/db.js';
 import authRoutes from './routes/auth.routes.js';
 import messageRoutes from './routes/message.route.js';
 import adminRoutes from './routes/admin.routes.js';
+import ebookRoutes from './routes/ebook.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 dotenv.config();
 
@@ -81,6 +83,12 @@ app.use('/api/auth', authRoutes);
 
 // Message / enquiry routes
 app.use('/api/message', messageRoutes);
+
+// eBook public routes
+app.use('/api/ebooks', ebookRoutes);
+
+// Order / purchase routes
+app.use('/api/orders', orderRoutes);
 
 //Admin routes
 app.use('/api/admin', adminRoutes);

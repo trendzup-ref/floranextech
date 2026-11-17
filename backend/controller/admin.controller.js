@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import { EBook } from "../models/eBook.model.js";
+import { ContactMessage } from "../models/contactMessage.model.js";
 import { generateSlug } from "../utils/generateSlug.js";
 import { uploadToGridFS, deleteFromGridFS, streamGridFSFile } from "../utils/gridfs.js";
 
@@ -97,9 +98,9 @@ export const publishEbook = async (req, res) => {
             slug,
             description,
             price,
-            category = "eBook",
             isPublished = true,
         } = req.body;
+        const category = "eBook";
 
         if (!title || !description || price === undefined) {
             return res.status(400).json({
@@ -140,7 +141,7 @@ export const publishEbook = async (req, res) => {
                 fileId: uploadedCoverId,
                 filename: coverImageFile.originalname,
                 contentType: coverImageFile.mimetype,
-                url: `/api/admin/ebooks/files/${uploadedCoverId}`,
+                url: `/api/ebooks/files/${uploadedCoverId}`,
             };
         } else if (req.body.coverImage) {
             // Fallback for JSON body or raw URLs
@@ -219,8 +220,8 @@ export const publishEbook = async (req, res) => {
             });
         }
 
-        // Generate or normalize slug
-        let finalSlug = slug ? generateSlug(slug) : generateSlug(title);
+        // Always automatically generate slug from title
+        let finalSlug = generateSlug(title);
 
         // Ensure unique slug
         let slugExists = await EBook.findOne({ slug: finalSlug });
@@ -265,7 +266,6 @@ export const publishEbook = async (req, res) => {
         });
     }
 };
-
 
 export const deleteEbook = async (req, res) => {
     try {
@@ -322,8 +322,7 @@ export const getAllEbooks = async (req, res) => {
             ? {
                 $or: [
                     { title: { $regex: search, $options: 'i' } },
-                    { slug: { $regex: search, $options: 'i' } },
-                    { category: { $regex: search, $options: 'i' } }
+                    { slug: { $regex: search, $options: 'i' } }
                 ]
             }
             : {};
@@ -404,5 +403,131 @@ export const getGridFSFile = async (req, res) => {
     } catch (error) {
         console.error("Error getting GridFS file:", error);
         return res.status(500).json({ success: false, message: "Error retrieving file from GridFS" });
+    }
+};
+
+/**
+ * Fetch all contact messages with server-side pagination and search filter.
+ */
+export const getAllContactMessages = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page, 10) || 1;
+        const limit = parseInt(req.query.limit, 10) || 10;
+        const skip = (page - 1) * limit;
+
+        const search = req.query.search?.trim() || '';
+        const query = search
+            ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } },
+                    { subject: { $regex: search, $options: 'i' } },
+                    { message: { $regex: search, $options: 'i' } },
+                ]
+            }
+            : {};
+
+        const [messages, totalMessages] = await Promise.all([
+            ContactMessage.find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            ContactMessage.countDocuments(query)
+        ]);
+
+        const totalPages = Math.ceil(totalMessages / limit);
+
+        return res.status(200).json({
+            success: true,
+            message: "Contact messages fetched successfully",
+            messages,
+            pagination: {
+                totalMessages,
+                totalPages,
+                currentPage: page,
+                limit,
+                hasNextPage: page < totalPages,
+                hasPrevPage: page > 1,
+            }
+        });
+    } catch (error) {
+        console.error("Error while fetching contact messages:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching contact messages"
+        });
+    }
+};
+
+/**
+ * Get details of a single contact message by ID.
+ */
+export const getContactMessageDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid contact message ID"
+            });
+        }
+
+        const message = await ContactMessage.findById(id);
+
+        if (!message) {
+            return res.status(404).json({
+                success: false,
+                message: "Contact message not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Contact message details retrieved successfully",
+            data: message
+        });
+    } catch (error) {
+        console.error("Error fetching contact message details:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch contact message details"
+        });
+    }
+};
+
+/**
+ * Delete a specific contact message by ID.
+ */
+export const deleteContactMessage = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid contact message ID"
+            });
+        }
+
+        const deleted = await ContactMessage.findByIdAndDelete(id);
+
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: "Contact message not found"
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Contact message deleted successfully"
+        });
+    } catch (error) {
+        console.error("Error deleting contact message:", error);
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while deleting the contact message"
+        });
     }
 };

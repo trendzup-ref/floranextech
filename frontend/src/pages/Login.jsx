@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Sparkles, Mail, Lock, ArrowRight } from "lucide-react";
 import { loginUser } from "@/api/authApi";
 import { useAuth } from "@/context";
@@ -12,6 +12,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const { fetchUser } = useAuth();
 
   const handleLogin = async (e) => {
@@ -27,7 +28,8 @@ const Login = () => {
       const res = await loginUser({ email, password });
       if (res?.success) {
         await fetchUser();
-        navigate("/");
+        const destination = location.state?.from || "/";
+        navigate(destination);
       } else {
         setError(res?.message || "Invalid email or password");
       }
