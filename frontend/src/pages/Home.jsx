@@ -23,7 +23,7 @@ export default function Home() {
       </div>
 
       {/* Main Hero Container */}
-      <section className="relative z-10 w-full max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 pt-4 pb-8 lg:py-12">
+      <section className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-10 pt-4 pb-8 lg:py-12">
 
         {/* -------------------- ROW 1: "WE DRIVE" + RIGHT SHOWCASE CARD -------------------- */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch mb-4 lg:mb-6">
@@ -35,7 +35,7 @@ export default function Home() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-8 flex items-center"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw]  xl:text-[19vw] 2xl:text-[21vw] leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[17vw] lg:text-[21vw]  leading-[0.82] tracking-[0.001em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               WE DRIVE
             </h1>
           </motion.div>
@@ -151,7 +151,7 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-7 flex items-center justify-start lg:justify-end order-1 lg:order-2"
           >
-            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] xl:text-[19vw] 2xl:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
+            <h1 className="font-display font-bold text-[22vw] sm:text-[19vw] lg:text-[21vw] leading-[0.8] tracking-[0.004em] text-white uppercase select-none drop-shadow-sm whitespace-nowrap">
               GROWTH
             </h1>
           </motion.div>
